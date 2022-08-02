@@ -4,14 +4,29 @@ import * as path from 'path';
 
 (async () => {
 
+    // console.log(licenseData);
+    await writeContributorData();
+    await writeLicenseData();
+
+})();
+
+async function writeContributorData() {
+
+    const licenseReq = await fetch('https://api.github.com/codes_of_conduct/contributor_covenant');
+    const licenseData = await licenseReq.json();
+    
+    fs.writeFileSync(path.join(process.cwd(), './CONTRIBUTING.md'), cleanLicenseData(licenseData.body));
+
+}
+
+async function writeLicenseData() {
+
     const licenseReq = await fetch('https://api.github.com/licenses/mit');
     const licenseData = await licenseReq.json();
     
     fs.writeFileSync(path.join(process.cwd(), './LICENSE.md'), cleanLicenseData(licenseData.body));
 
-    // console.log(licenseData);
-
-})();
+}
 
 function cleanLicenseData(licenseData) {
 
